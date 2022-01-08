@@ -12,7 +12,10 @@ var getWeatherData = function(city) {
                 var date = data.list[0].dt_txt;
                 var wind = data.list[0].wind.speed;
                 var humidity = data.list[0].main.humidity;
+                var lat = data.city.coord.lat;
+                var lon = data.city.coord.lon;
                 console.log(data);
+                getUVIndex(lat, lon);
                 todaysForecast(cityName, date, temp, wind, humidity);
                 fiveDayForecast();
             });
@@ -27,7 +30,23 @@ var getWeatherData = function(city) {
 }
 
 var getUVIndex = function(lat, lon) {
-    var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude={part}&appid={API key}`
+    var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude={part}&appid=${key}&units=imperial`;
+
+    fetch(apiUrl).then(function(response) {
+        if (response.ok) {
+            response.json().then(function(data) {
+                console.log(data);
+                var uvi = data.current.uvi;
+                uvIndex(uvi);
+            });
+        }
+        else {
+            console.log("La")
+        }
+    })
+    .catch(function(error) {
+        alert("Unable to connect to Open Weather");
+    });
 }
 
 // enter city name to display weather info
@@ -53,7 +72,12 @@ $(".btn").on("click", formSubmitHandler);
 // display todays forecast
 var todaysForecast = function(cityName, date, temp, wind, humidity) {
     $("#todays-forecast").append(`<h3>${cityName} ${date}</h3>`);
-    $("#todays-forecast").append(`<ul><li>Temp: ${temp} F</li><li>Wind: ${wind}</li><li>Humidity: ${humidity}</li></ul>`).css("border", "2px solid #40C3E0");
+    $("#todays-forecast").append(`<ul class="weather-data"><li>Temp: ${temp} F</li><li>Wind: ${wind}</li><li>Humidity: ${humidity}</li></ul>`).css("border", "2px solid #40C3E0");
+}
+
+// display UV Index
+var uvIndex = function(uvIndex) {
+    $(".weather-data").append(`<li>UV Index: ${uvIndex}`);
 }
 
 // display 5 day forecast
