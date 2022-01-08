@@ -1,3 +1,7 @@
+* {
+    font-family: 'Space Mono', monospace;
+}
+
 .app-title {
     text-align: center;
 }
@@ -6,7 +10,7 @@
     width: 100%;
     background-color: #40E0D0;
     color: #FFFFFF;
-    font-family: 'Space Mono', monospace;
+    /* font-family: 'Space Mono', monospace; */
     margin-top: 7px;
 }
 
