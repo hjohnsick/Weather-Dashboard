@@ -1,6 +1,7 @@
 var key = '30d8714bc17bbf67d0fd08cb69785152';
 var cityInputEl = document.querySelector(".form-input");
 
+// Displays all the weather data
 var getWeatherData = function(city) {
     var apiUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}&units=imperial`;
 
@@ -15,8 +16,7 @@ var getWeatherData = function(city) {
                 var lat = data.city.coord.lat;
                 var lon = data.city.coord.lon;
                 console.log(data);
-                getUVIndex(lat, lon);
-                todaysForecast(cityName, date, temp, wind, humidity);
+                getCurrentWeather(lat, lon);
                 fiveDayForecast();
             });
         }
@@ -29,15 +29,22 @@ var getWeatherData = function(city) {
     });
 }
 
-var getUVIndex = function(lat, lon) {
-    var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude={part}&appid=${key}&units=imperial`;
+// Get weather for current day
+var getCurrentWeather = function(lat, lon) {
+    var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${key}`;
 
     fetch(apiUrl).then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
                 console.log(data);
                 var uvi = data.current.uvi;
-                uvIndex(uvi);
+                var currentTemp = data.current.temp;
+                var humidity = data.current.humidity;
+                var windSpeed = data.current.wind_speed;
+                var timezone = data.timezone;
+                var city = timezone.split('/')[1];
+                var date = data.current.dt;
+                todaysForecast(city, date, currentTemp, windSpeed, humidity, uvi);
             });
         }
         else {
@@ -70,15 +77,16 @@ $(".btn").on("click", formSubmitHandler);
 // for saved cities display button with city name that can be clicked to display that cities weather info
 
 // display todays forecast
-var todaysForecast = function(cityName, date, temp, wind, humidity) {
+var todaysForecast = function(cityName, date, temp, wind, humidity, uvIndex) {
     $("#todays-forecast").append(`<h3>${cityName} ${date}</h3>`);
     $("#todays-forecast").append(`<ul class="weather-data"><li>Temp: ${temp} F</li><li>Wind: ${wind}</li><li>Humidity: ${humidity}</li></ul>`).css("border", "2px solid #40C3E0");
-}
-
-// display UV Index
-var uvIndex = function(uvIndex) {
     $(".weather-data").append(`<li>UV Index: ${uvIndex}`);
 }
+
+// // display UV Index
+// var uvIndex = function(uvIndex) {
+//     $(".weather-data").append(`<li>UV Index: ${uvIndex}`);
+// }
 
 // display 5 day forecast
 var fiveDayForecast = function() {
