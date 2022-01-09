@@ -39,14 +39,16 @@ var getForecastByLatLon = function(lat, lon) {
                 var timezone = data.timezone;
                 var city = timezone.split('/')[1];
                 var timestamp = data.current.dt;
-                var date = new Date(timestamp*1000).toLocaleString();
+                var dateTime = new Date(timestamp*1000).toLocaleString();
+                var date = moment(new Date(dateTime)).format('L');
                 var icon = data.current.weather[0].icon;
                 todaysForecast(city, date, icon, currentTemp, windSpeed, humidity, uvi);
                 // Display 5 day forecast
                 $("#forecast").show();
                 for (var i = 0; i < 6; i++) {
                     var fTimestamp = data.daily[i].dt;
-                    var fDate = new Date(fTimestamp*1000).toLocaleString();
+                    var fDateTime = new Date(fTimestamp*1000).toLocaleString();
+                    var fDate = moment(new Date(fDateTime)).format('L');
                     var fTemp = data.daily[i].temp.day;
                     var fWind = data.daily[i].wind_speed;
                     var fHumidity = data.daily[i].humidity;
