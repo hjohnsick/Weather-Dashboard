@@ -97,4 +97,5 @@ var todaysForecast = function(cityName, date, icon, temp, wind, humidity, uvInde
 // display 5 day forecast
 var fiveDayForecast = function(index, date, icon, temp, wind, humidity) {
     $(`#day-${index}`).append(`<ul class="day"><li>${date}</li><li><img src="http://openweathermap.org/img/w/${icon}.png" alt="current weather"></li><li>Temp: ${temp} &#8457</li><li>Wind: ${wind} MPH</li><li>Humidity: ${humidity}%</li></ul>`);
+    $('.day').css({ 'background-color': '#40C3E0', 'padding': '4px'});
 }

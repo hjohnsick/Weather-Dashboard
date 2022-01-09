@@ -21,7 +21,8 @@ li {
     list-style: none;
 }
 
-.day {
-    background-color: #40C3E0;
+.weather-data {
+    padding: 4px;
 }
+
 
