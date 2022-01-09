@@ -1,6 +1,6 @@
 var key = '30d8714bc17bbf67d0fd08cb69785152';
 var cityInputEl = document.querySelector(".form-input");
-
+$("#forecast").hide();
 // Displays all the weather data
 var getWeatherData = function(city) {
     var apiUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}&units=imperial`;
@@ -8,16 +8,11 @@ var getWeatherData = function(city) {
     fetch(apiUrl).then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
-                var temp = data.list[0].main.temp;
-                var cityName = data.city.name;
-                var date = data.list[0].dt_txt;
-                var wind = data.list[0].wind.speed;
-                var humidity = data.list[0].main.humidity;
                 var lat = data.city.coord.lat;
                 var lon = data.city.coord.lon;
                 console.log(data);
                 getCurrentWeather(lat, lon);
-                fiveDayForecast();
+                
             });
         }
         else {
@@ -45,6 +40,16 @@ var getCurrentWeather = function(lat, lon) {
                 var city = timezone.split('/')[1];
                 var date = data.current.dt;
                 todaysForecast(city, date, currentTemp, windSpeed, humidity, uvi);
+                // Display 5 day forecast
+                $("#forecast").show();
+                for (var i = 0; i < 6; i++) {
+                    var fDate = data.daily[i].date;
+                    var fTemp = data.daily[i].temp.day;
+                    var fWind = data.daily[i].wind_speed;
+                    var fHumidity = data.daily[i].humidity;
+                    fiveDayForecast(i, fDate, fTemp, fWind, fHumidity);
+                }
+                
             });
         }
         else {
@@ -79,16 +84,11 @@ $(".btn").on("click", formSubmitHandler);
 // display todays forecast
 var todaysForecast = function(cityName, date, temp, wind, humidity, uvIndex) {
     $("#todays-forecast").append(`<h3>${cityName} ${date}</h3>`);
-    $("#todays-forecast").append(`<ul class="weather-data"><li>Temp: ${temp} F</li><li>Wind: ${wind}</li><li>Humidity: ${humidity}</li></ul>`).css("border", "2px solid #40C3E0");
+    $("#todays-forecast").append(`<ul class="weather-data"><li>Temp: ${temp} &#8457</li><li>Wind: ${wind}</li><li>Humidity: ${humidity}</li></ul>`).css("border", "2px solid #40C3E0");
     $(".weather-data").append(`<li>UV Index: ${uvIndex}`);
 }
 
-// // display UV Index
-// var uvIndex = function(uvIndex) {
-//     $(".weather-data").append(`<li>UV Index: ${uvIndex}`);
-// }
-
 // display 5 day forecast
-var fiveDayForecast = function() {
-    $("#five-day-forecast").append(`<h3>5-Day Forecast:</h3>`);
+var fiveDayForecast = function(index, date, temp, wind, humidity) {
+    $(`#day-${index}`).append(`<ul class="day"><li>${date}</li><li>Temp: ${temp} &#8457</li><li>Wind: ${wind}</li><li>Humidity: ${humidity}</li></ul>`);
 }
