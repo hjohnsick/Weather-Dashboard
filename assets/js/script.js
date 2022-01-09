@@ -2,7 +2,7 @@ var key = '30d8714bc17bbf67d0fd08cb69785152';
 var cityInputEl = document.querySelector(".form-input");
 $("#forecast").hide();
 // Displays all the weather data
-var getWeatherData = function(city) {
+var getWeatherDataByCity = function(city) {
     var apiUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}&units=imperial`;
 
     fetch(apiUrl).then(function(response) {
@@ -11,7 +11,7 @@ var getWeatherData = function(city) {
                 var lat = data.city.coord.lat;
                 var lon = data.city.coord.lon;
                 console.log(data);
-                getCurrentWeather(lat, lon);
+                getForecastByLatLon(lat, lon);
                 
             });
         }
@@ -25,7 +25,7 @@ var getWeatherData = function(city) {
 }
 
 // Get weather for current day
-var getCurrentWeather = function(lat, lon) {
+var getForecastByLatLon = function(lat, lon) {
     var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${key}`;
 
     fetch(apiUrl).then(function(response) {
@@ -38,16 +38,20 @@ var getCurrentWeather = function(lat, lon) {
                 var windSpeed = data.current.wind_speed;
                 var timezone = data.timezone;
                 var city = timezone.split('/')[1];
-                var date = data.current.dt;
-                todaysForecast(city, date, currentTemp, windSpeed, humidity, uvi);
+                var timestamp = data.current.dt;
+                var date = new Date(timestamp*1000).toLocaleString();
+                var icon = data.current.weather[0].icon;
+                todaysForecast(city, date, icon, currentTemp, windSpeed, humidity, uvi);
                 // Display 5 day forecast
                 $("#forecast").show();
                 for (var i = 0; i < 6; i++) {
-                    var fDate = data.daily[i].date;
+                    var fTimestamp = data.daily[i].dt;
+                    var fDate = new Date(fTimestamp*1000).toLocaleString();
                     var fTemp = data.daily[i].temp.day;
                     var fWind = data.daily[i].wind_speed;
                     var fHumidity = data.daily[i].humidity;
-                    fiveDayForecast(i, fDate, fTemp, fWind, fHumidity);
+                    var fIcon = data.daily[i].weather[0].icon;
+                    fiveDayForecast(i, fDate, fIcon, fTemp, fWind, fHumidity);
                 }
                 
             });
@@ -68,7 +72,7 @@ var formSubmitHandler = function(event) {
     var city = cityInputEl.value.trim();
 
     if (city) {
-        getWeatherData(city);
+        getWeatherDataByCity(city);
         cityInputEl.value = "";
     } else {
         alert("Please enter a city");
@@ -82,13 +86,13 @@ $(".btn").on("click", formSubmitHandler);
 // for saved cities display button with city name that can be clicked to display that cities weather info
 
 // display todays forecast
-var todaysForecast = function(cityName, date, temp, wind, humidity, uvIndex) {
-    $("#todays-forecast").append(`<h3>${cityName} ${date}</h3>`);
-    $("#todays-forecast").append(`<ul class="weather-data"><li>Temp: ${temp} &#8457</li><li>Wind: ${wind}</li><li>Humidity: ${humidity}</li></ul>`).css("border", "2px solid #40C3E0");
+var todaysForecast = function(cityName, date, icon, temp, wind, humidity, uvIndex) {
+    $("#todays-forecast").append(`<h3>${cityName} ${date} <img src="http://openweathermap.org/img/w/${icon}.png" alt="current weather"></h3>`);
+    $("#todays-forecast").append(`<ul class="weather-data"><li>Temp: ${temp} &#8457</li><li>Wind: ${wind} MPH</li><li>Humidity: ${humidity}%</li></ul>`).css("border", "2px solid #40C3E0");
     $(".weather-data").append(`<li>UV Index: ${uvIndex}`);
 }
 
 // display 5 day forecast
-var fiveDayForecast = function(index, date, temp, wind, humidity) {
-    $(`#day-${index}`).append(`<ul class="day"><li>${date}</li><li>Temp: ${temp} &#8457</li><li>Wind: ${wind}</li><li>Humidity: ${humidity}</li></ul>`);
+var fiveDayForecast = function(index, date, icon, temp, wind, humidity) {
+    $(`#day-${index}`).append(`<ul class="day"><li>${date}</li><li><img src="http://openweathermap.org/img/w/${icon}.png" alt="current weather"></li><li>Temp: ${temp} &#8457</li><li>Wind: ${wind} MPH</li><li>Humidity: ${humidity}%</li></ul>`);
 }
