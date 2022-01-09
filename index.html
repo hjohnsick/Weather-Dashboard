@@ -24,41 +24,39 @@
       <h1 class="app-title">Weather Dashboard</h1>
     </header>
     <main>
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-md-3">
-            <h3>Search for a City:</h3>
-            <form id="text-input">
-              <input
-                name="city"
-                id="city"
-                type="text"
-                autofocus="true"
-                class="form-input"
-              />
-              <button type="submit" class="btn">Search</button>
-            </form>
-            <div class="cities">
-              <!-- Searched cities will go here -->
-            </div>
-          </div>
-          <div class="col-12 col-md-9">
-            <!-- Weather will display here along with 5 day forecast -->
-            <div id="todays-forecast"></div>
+        <div class="container">
             <div class="row">
-                <div id="five-day-forecast">
-                    <h3 id="forecast">5-Day Forecast:</h3>
-                  <div class="day" id="day-1"></div>
-                  <div class="day" id="day-2"></div>
-                  <div class="day" id="day-3"></div>
-                  <div class="day" id="day-4"></div>
-                  <div class="day" id="day-5"></div>
+              <div class="col-12 col-md-2">
+                <h3>Search for a City:</h3>
+                <form id="text-input">
+                  <input
+                    name="city"
+                    id="city"
+                    type="text"
+                    autofocus="true"
+                    class="form-input"
+                  />
+                  <button type="submit" class="btn">Search</button>
+                </form>
+                <div class="cities">
+                  <!-- Searched cities will go here -->
                 </div>
+              </div>
+              <div class="col-12 col-md-10">
+                <!-- Weather will display here along with 5 day forecast -->
+                <div id="todays-forecast"></div>
+                <div class="row justify-content-around">
+                        <h3 id="forecast">5-Day Forecast:</h3>
+                      <div class="col-12 col-md-2 day" id="day-1"></div>
+                      <div class="col-12 col-md-2 day" id="day-2"></div>
+                      <div class="col-12 col-md-2 day" id="day-3"></div>
+                      <div class="col-12 col-md-2 day" id="day-4"></div>
+                      <div class="col-12 col-md-2 day" id="day-5"></div>
+                </div>
+              </div>
+              </div>
             </div>
-            
           </div>
-        </div>
-      </div>
     </main>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="./assets/js/script.js"></script>
