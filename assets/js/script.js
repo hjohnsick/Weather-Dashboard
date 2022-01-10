@@ -2,6 +2,7 @@ var key = '30d8714bc17bbf67d0fd08cb69785152';
 var cityInputEl = document.querySelector(".form-input");
 var todaysForecastContainer = document.querySelector("#todays-forecast");
 var fiveDayForecastContainer = document.querySelector("#five-day-forecast");
+var citiesContainer = document.querySelector(".cities");
 var cities = [];
 
 // enter city name to display weather info
@@ -13,7 +14,6 @@ var formSubmitHandler = function(event) {
     if (city) {
         getWeatherDataByCity(city);
         saveSeachHistory(city);
-        
         cityInputEl.value = "";
     } else {
         alert("Please enter a city");
@@ -109,11 +109,11 @@ $(".btn").on("click", formSubmitHandler);
 
 // save searched cities
 var saveSeachHistory = function (city) {
-    debugger;
     if (!cities.includes(city)) {
         cities.push(city);
         console.log(cities);
         localStorage.setItem("cities", JSON.stringify(cities));
+        getSavedCities();
     }
 }
 
@@ -126,11 +126,14 @@ var getSavedCities = function () {
         return;
     }
     
+    citiesContainer.textContent = '';
     for (var i = 0; i < savedCities.length; i++) {
-        $(".cities").append(`<button id="saved-city${i}" class="city-button" data-index="${i}">${savedCities[i]}</button>`);
-    $(`#saved-city${[i]}`).css({ 'background-color': '#8972C8', 'color': '#FFFFFF', 'margin-top': '7px', 'width': '100%'});
-    }
+        
+            $(".cities").append(`<button id="saved-city${i}" class="city-button" data-index="${i}">${savedCities[i]}</button>`);
+            $(`#saved-city${[i]}`).css({ 'background-color': '#8972C8', 'color': '#FFFFFF', 'margin-top': '7px', 'width': '100%'});
     
+    }
+
     console.log(savedCities);
 }
 
@@ -174,6 +177,7 @@ var changeColorOfUVIndex = function (uvIndex) {
 }
 
 var displayClickedData = function (event) {
+    console.log("This is being called");
     var index = $(event.target).attr("data-index");
     var cityButton = document.getElementById(`saved-city${index}`);
     var city = $(cityButton).text();
@@ -182,3 +186,4 @@ var displayClickedData = function (event) {
 
 getSavedCities();
 $(`.city-button`).on("click", displayClickedData);
+console.log(`This is what cities holds: ${cities}`);
