@@ -126,12 +126,10 @@ var getSavedCities = function () {
     }
     
     for (var i = 0; i < savedCities.length; i++) {
-        $(".cities").append(`<button id="saved-city${i}">${savedCities[i]}</button>`);
+        $(".cities").append(`<button id="saved-city${i}" class="city-button" data-index="${i}">${savedCities[i]}</button>`);
     $(`#saved-city${[i]}`).css({ 'background-color': '#8972C8', 'color': '#FFFFFF', 'margin-top': '7px', 'width': '100%'});
     }
     
-    // $(`#saved-city${[i]}`).on("click", getWeatherDataByCity(savedCities[i]));
-
     console.log(savedCities);
 }
 
@@ -173,4 +171,14 @@ var changeColorOfUVIndex = function (uvIndex) {
     }
 }
 
+var displayClickedData = function (event) {
+    var index = $(event.target).attr("data-index");
+    var cityButton = document.getElementById(`saved-city${index}`);
+    var city = $(cityButton).text();
+    // console.log(cityButton);
+    getWeatherDataByCity(city);
+    console.log(city);
+}
+
 getSavedCities();
+$(`.city-button`).on("click", displayClickedData);
