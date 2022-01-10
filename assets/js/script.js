@@ -1,8 +1,9 @@
 var key = '30d8714bc17bbf67d0fd08cb69785152';
 var cityInputEl = document.querySelector(".form-input");
-var forecastDataContainer = document.querySelector("#forecast-data");
+var todaysForecastContainer = document.querySelector("#todays-forecast");
+var fiveDayForecastContainer = document.querySelector("#five-day-forecast");
 var cities = [];
-$("#forecast").hide();
+// $("#forecast").hide();
 
 // enter city name to display weather info
 var formSubmitHandler = function(event) {
@@ -23,6 +24,7 @@ var formSubmitHandler = function(event) {
 
 // Display current days weather
 var displayCurrentWeather = function(data, cityName) {
+    todaysForecastContainer.textContent = '';
     var uvi = data.current.uvi;
     var currentTemp = data.current.temp;
     var humidity = data.current.humidity;
@@ -39,7 +41,8 @@ var displayCurrentWeather = function(data, cityName) {
 
 // Display 5 day forecast
 var displayFiveDayForecast = function(data) {
-    $("#forecast").show();
+    fiveDayForecastContainer.textContent = '';
+    $(fiveDayForecastContainer).append(`<h3 id="forecast">5-Day Forecast:</h3>`)
                 for (var i = 0; i < 6; i++) {
                     var fTimestamp = data.daily[i].dt;
                     var fDateTime = new Date(fTimestamp*1000).toLocaleString();
