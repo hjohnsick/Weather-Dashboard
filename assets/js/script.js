@@ -5,6 +5,80 @@ var fiveDayForecastContainer = document.querySelector("#five-day-forecast");
 var citiesContainer = document.querySelector(".cities");
 var cities = [];
 
+
+
+// save searched cities
+var saveSeachHistory = function (city) {
+    if (!cities.includes(city)) {
+        cities.push(city);
+        console.log(cities);
+        localStorage.setItem("cities", JSON.stringify(cities));
+    }
+}
+
+// for saved cities display button with city name that can be clicked to display that cities weather info
+var getSavedCities = function () {
+    var savedCities = JSON.parse(localStorage.getItem("cities"));
+
+    if (!savedCities) {
+        return;
+    }
+    
+    citiesContainer.textContent = '';
+    for (var i = 0; i < savedCities.length; i++) {
+        
+            $(".cities").append(`<button id="saved-city${i}" class="city-button" data-index="${i}">${savedCities[i]}</button>`);
+            $(`#saved-city${[i]}`).css({ 'background-color': '#8972C8', 'color': '#FFFFFF', 'margin-top': '7px', 'width': '100%'});
+    
+    }
+
+    console.log(savedCities);
+}
+
+// Get weather for current day
+var getForecastByLatLon = function(lat, lon, city) {
+    var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${key}`;
+
+    fetch(apiUrl).then(function(response) {
+        if (response.ok) {
+            response.json().then(function(data) {
+                console.log(data);
+                displayCurrentWeather(data, city);
+                displayFiveDayForecast(data);
+            });
+        }
+        else {
+            console.log("La")
+        }
+    })
+    .catch(function(error) {
+        alert("Unable to connect to Open Weather");
+    });
+}
+
+// Displays all the weather data
+var getWeatherDataByCity = function(city) {
+    var apiUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}&units=imperial`;
+
+    fetch(apiUrl).then(function(response) {
+        if (response.ok) {
+            response.json().then(function(data) {
+                var lat = data.city.coord.lat;
+                var lon = data.city.coord.lon;
+                var city = data.city.name;
+                console.log(data);
+                getForecastByLatLon(lat, lon, city);
+            });
+        }
+        else {
+            alert(`Error ${city} not found!`);
+        }
+    })
+    .catch(function(error) {
+        alert("Unable to connect to Open Weather");
+    });
+}
+
 // enter city name to display weather info
 var formSubmitHandler = function(event) {
     event.preventDefault();
@@ -14,6 +88,7 @@ var formSubmitHandler = function(event) {
     if (city) {
         getWeatherDataByCity(city);
         saveSeachHistory(city);
+        getSavedCities();
         cityInputEl.value = "";
     } else {
         alert("Please enter a city");
@@ -60,82 +135,8 @@ var displayFiveDayForecast = function(data) {
                 }
 }
 
-// Displays all the weather data
-var getWeatherDataByCity = function(city) {
-    var apiUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}&units=imperial`;
-
-    fetch(apiUrl).then(function(response) {
-        if (response.ok) {
-            response.json().then(function(data) {
-                var lat = data.city.coord.lat;
-                var lon = data.city.coord.lon;
-                var city = data.city.name;
-                console.log(data);
-                getForecastByLatLon(lat, lon, city);
-            });
-        }
-        else {
-            alert(`Error ${city} not found!`);
-        }
-    })
-    .catch(function(error) {
-        alert("Unable to connect to Open Weather");
-    });
-}
-
-// Get weather for current day
-var getForecastByLatLon = function(lat, lon, city) {
-    var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${key}`;
-
-    fetch(apiUrl).then(function(response) {
-        if (response.ok) {
-            response.json().then(function(data) {
-                console.log(data);
-                displayCurrentWeather(data, city);
-                displayFiveDayForecast(data);
-            });
-        }
-        else {
-            console.log("La")
-        }
-    })
-    .catch(function(error) {
-        alert("Unable to connect to Open Weather");
-    });
-}
-
 
 $(".btn").on("click", formSubmitHandler);
-
-// save searched cities
-var saveSeachHistory = function (city) {
-    if (!cities.includes(city)) {
-        cities.push(city);
-        console.log(cities);
-        localStorage.setItem("cities", JSON.stringify(cities));
-        getSavedCities();
-    }
-}
-
-
-// for saved cities display button with city name that can be clicked to display that cities weather info
-var getSavedCities = function () {
-    var savedCities = JSON.parse(localStorage.getItem("cities"));
-
-    if (!savedCities) {
-        return;
-    }
-    
-    citiesContainer.textContent = '';
-    for (var i = 0; i < savedCities.length; i++) {
-        
-            $(".cities").append(`<button id="saved-city${i}" class="city-button" data-index="${i}">${savedCities[i]}</button>`);
-            $(`#saved-city${[i]}`).css({ 'background-color': '#8972C8', 'color': '#FFFFFF', 'margin-top': '7px', 'width': '100%'});
-    
-    }
-
-    console.log(savedCities);
-}
 
 
 // display todays forecast
