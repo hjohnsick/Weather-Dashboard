@@ -34,7 +34,7 @@ var getSavedCities = function () {
       width: "100%",
     });
   }
-
+  $(`.city-button`).on("click", displayClickedData);
   console.log(savedCities);
 };
 
@@ -178,6 +178,14 @@ var getWeatherDataByCity = function (city) {
     });
 };
 
+var displayClickedData = function (event) {
+    console.log("This is being called");
+    var index = $(event.target).attr("data-index");
+    var cityButton = document.getElementById(`saved-city${index}`);
+    var city = $(cityButton).text();
+    getWeatherDataByCity(city);
+  };
+
 // enter city name to display weather info
 var formSubmitHandler = function (event) {
   event.preventDefault();
@@ -196,14 +204,6 @@ var formSubmitHandler = function (event) {
 
 $(".btn").on("click", formSubmitHandler);
 
-var displayClickedData = function (event) {
-  console.log("This is being called");
-  var index = $(event.target).attr("data-index");
-  var cityButton = document.getElementById(`saved-city${index}`);
-  var city = $(cityButton).text();
-  getWeatherDataByCity(city);
-};
-
 getSavedCities();
-$(`.city-button`).on("click", displayClickedData);
+
 console.log(`This is what cities holds: ${cities}`);
