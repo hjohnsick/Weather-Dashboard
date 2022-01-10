@@ -14,7 +14,6 @@ var formSubmitHandler = function(event) {
     if (city) {
         getWeatherDataByCity(city);
         saveSeachHistory(city);
-        getSavedCities();
         cityInputEl.value = "";
     } else {
         alert("Please enter a city");
@@ -42,7 +41,12 @@ var displayCurrentWeather = function(data, cityName) {
 // Display 5 day forecast
 var displayFiveDayForecast = function(data) {
     fiveDayForecastContainer.textContent = '';
-    $(fiveDayForecastContainer).append(`<h3 id="forecast">5-Day Forecast:</h3>`)
+    $(fiveDayForecastContainer).append(`<h3 id="forecast">5-Day Forecast:</h3> 
+    <div class="col-12 col-md-2 day" id="day-1"></div>
+    <div class="col-12 col-md-2 day" id="day-2"></div>
+    <div class="col-12 col-md-2 day" id="day-3"></div>
+    <div class="col-12 col-md-2 day" id="day-4"></div>
+    <div class="col-12 col-md-2 day" id="day-5"></div>`);
                 for (var i = 0; i < 6; i++) {
                     var fTimestamp = data.daily[i].dt;
                     var fDateTime = new Date(fTimestamp*1000).toLocaleString();
@@ -112,7 +116,7 @@ var saveSeachHistory = function (city) {
     }
 }
 
-var i = 0;
+
 // for saved cities display button with city name that can be clicked to display that cities weather info
 var getSavedCities = function () {
     var savedCities = JSON.parse(localStorage.getItem("cities"));
@@ -121,10 +125,13 @@ var getSavedCities = function () {
         return;
     }
     
-    $(".cities").append(`<button id="saved-city${i}">${savedCities[i]}</button>`);
-    $(`#saved-city${[i]}`).on("click", getWeatherDataByCity(savedCities[i]));
+    for (var i = 0; i < savedCities.length; i++) {
+        $(".cities").append(`<button id="saved-city${i}">${savedCities[i]}</button>`);
+    $(`#saved-city${[i]}`).css({ 'background-color': '#8972C8', 'color': '#FFFFFF', 'margin-top': '7px', 'width': '100%'});
+    }
+    
+    // $(`#saved-city${[i]}`).on("click", getWeatherDataByCity(savedCities[i]));
 
-    i++;
     console.log(savedCities);
 }
 
@@ -165,3 +172,5 @@ var changeColorOfUVIndex = function (uvIndex) {
         console.log("purple");
     }
 }
+
+getSavedCities();
