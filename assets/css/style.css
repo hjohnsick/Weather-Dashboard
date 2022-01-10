@@ -4,6 +4,8 @@
 
 .app-title {
     text-align: center;
+    background-image: linear-gradient(to right, #40E0D0, #6495ED);
+    margin-bottom: 20px;
 }
 
 .btn {

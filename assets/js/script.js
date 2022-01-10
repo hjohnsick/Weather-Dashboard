@@ -3,7 +3,6 @@ var cityInputEl = document.querySelector(".form-input");
 var todaysForecastContainer = document.querySelector("#todays-forecast");
 var fiveDayForecastContainer = document.querySelector("#five-day-forecast");
 var cities = [];
-// $("#forecast").hide();
 
 // enter city name to display weather info
 var formSubmitHandler = function(event) {
@@ -14,6 +13,7 @@ var formSubmitHandler = function(event) {
     if (city) {
         getWeatherDataByCity(city);
         saveSeachHistory(city);
+        
         cityInputEl.value = "";
     } else {
         alert("Please enter a city");
@@ -109,6 +109,7 @@ $(".btn").on("click", formSubmitHandler);
 
 // save searched cities
 var saveSeachHistory = function (city) {
+    debugger;
     if (!cities.includes(city)) {
         cities.push(city);
         console.log(cities);
@@ -132,6 +133,7 @@ var getSavedCities = function () {
     
     console.log(savedCities);
 }
+
 
 // display todays forecast
 var todaysForecast = function(cityName, date, icon, temp, wind, humidity, uvIndex) {
@@ -175,9 +177,7 @@ var displayClickedData = function (event) {
     var index = $(event.target).attr("data-index");
     var cityButton = document.getElementById(`saved-city${index}`);
     var city = $(cityButton).text();
-    // console.log(cityButton);
     getWeatherDataByCity(city);
-    console.log(city);
 }
 
 getSavedCities();
